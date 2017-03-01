@@ -7,8 +7,8 @@ This checkout is a valid ${jetty.base} directory too.
 To build:
 
 ```
-mvn clean install
-
+mvn clean package
+mvn assembly:single
 mvn jetty:run -Djetty.http.port=9999 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=5000000
 ```
 
