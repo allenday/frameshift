@@ -9,7 +9,19 @@ To build:
 ```
 mvn clean package
 mvn assembly:single
+```
+
+then Jetty
+
+```
 mvn jetty:run -Djetty.http.port=9999 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=5000000
+```
+
+or Tomcat
+
+```
+mvn package
+java -jar target/standalone.jar -httpPort=9999
 ```
 
 This should have created a webapps/root.war file for you
