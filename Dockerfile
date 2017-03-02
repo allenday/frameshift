@@ -3,6 +3,7 @@ FROM solr
 MAINTAINER Allen Day "allenday@allenday.com"
 
 USER root
+WORKDIR /
 
 ENV BUILD_PACKAGES=""
 ENV IMAGE_PACKAGES="git maven telnet openjdk-8-jdk"
@@ -20,21 +21,18 @@ EXPOSE 8983
 #RUN apt-get -y remove --purge $(apt-mark showauto)
 #RUN rm -rf /var/lib/apt/lists/*
 
-WORKDIR /
-
 RUN git clone https://github.com/allenday/image-similarity.git
 RUN cd image-similarity && mvn install assembly:single -DskipTests
 
+COPY entrypoint.sh /entrypoint.sh
 COPY uploadservlet /uploadservlet
 RUN cd /uploadservlet && mvn package
 
-COPY entrypoint.sh /entrypoint.sh
-
 USER solr
+WORKDIR /tmp
+
 RUN solr start && sleep 5 && solr create_core -c frameshift -p 8983 && solr stop -p 8983
 COPY managed-schema /opt/solr/server/solr/frameshift/conf/managed-schema
 
-USER solr
-WORKDIR /tmp
 ENTRYPOINT ["/bin/bash","/entrypoint.sh"]
 #CMD solr start && java -jar /uploadservlet/target/standalone.jar -httpPort=9999
