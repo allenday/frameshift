@@ -35,4 +35,3 @@ RUN solr start && sleep 5 && solr create_core -c frameshift -p 8983 && solr stop
 COPY managed-schema /opt/solr/server/solr/frameshift/conf/managed-schema
 
 ENTRYPOINT ["/bin/bash","/entrypoint.sh"]
-#CMD solr start && java -jar /uploadservlet/target/standalone.jar -httpPort=9999
