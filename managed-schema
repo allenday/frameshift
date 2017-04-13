@@ -123,7 +123,7 @@
     <field name="_root_" type="string" indexed="true" stored="false" docValues="false" />
     <field name="_text_" type="text_general" indexed="true" stored="false" multiValued="true"/>
 
-    <field name="rgbtc"       type="text_general" omitPositions="false" indexed="true" required="true" stored="true"/>
+    <field name="rgbtc"       type="text_general" omitPositions="false" indexed="true" required="true" stored="true" multiValued="true"/>
     <field name="file_id"     type="text_general" omitPositions="false" indexed="true" required="true" stored="true"/>
     <field name="time_offset" type="float"                              indexed="true" required="true" stored="true"/>
 
