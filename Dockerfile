@@ -27,12 +27,17 @@ RUN cd image-similarity && mvn install assembly:single -DskipTests
 COPY entrypoint.sh /entrypoint.sh
 COPY uploadservlet /uploadservlet
 RUN cd /uploadservlet && mvn package
+#RUN mkdir -p /opt/solr/server/solr/frameshift/conf
+#COPY solr-data /solr-data
+#COPY solr-data-full /solr-data-full
 
 USER solr
 WORKDIR /tmp
 
 RUN solr start && sleep 5 && solr create_core -c frameshift -p 8983 && solr stop -p 8983
-COPY managed-schema /opt/solr/server/solr/frameshift/conf/managed-schema
+#$-d /opt/solr/server/solr/frameshift 
+#$COPY managed-schema /opt/solr/server/solr/frameshift/conf/managed-schema
+#ADD solr-data /var/solr/data
 
 ENTRYPOINT ["/bin/bash","/entrypoint.sh"]
 
