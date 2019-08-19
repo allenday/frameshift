@@ -31,7 +31,7 @@ import org.apache.solr.common.SolrInputDocument;
 @MultipartConfig(location="/tmp/upload", fileSizeThreshold=1024*1024, maxFileSize=1024*1024*50)
 @WebServlet(urlPatterns={"/upload"}, name="upload")
 public class UploadServlet extends HttpServlet {
-  private ImageProcessor processor = new ImageProcessor(16,4,false);
+  private ImageProcessor processor = new ImageProcessor(8,3,false);
   private String urlString = "http://localhost:8984/solr/frameshift";
   private SolrClient solr = new HttpSolrClient.Builder(urlString).build();
 
@@ -40,7 +40,7 @@ public class UploadServlet extends HttpServlet {
     resp.setContentType("text/plain");
     PrintWriter out = resp.getWriter();
 
-    processor.clearFiles();
+    //processor.clearFiles();
         
     int i = 0;
     String file_id = null;
@@ -70,38 +70,38 @@ public class UploadServlet extends HttpServlet {
 
       else if ( part.getName().equals("file") ) {
         String upfile = String.format("part-%05d.jpg",(int) Math.ceil(Math.random() * 99999));
-
         part.write(upfile);
-        processor.addFile(new File("/tmp/upload/"+upfile));
-        processor.processImages();
+        ImageFeatures features = processor.extractFeatures(new File("/tmp/upload/"+upfile));
+        //processor.processImages();
 
-        for (Entry<File,ImageFeatures> e : processor.getResults().entrySet()) {
-          File image = e.getKey();
-          ImageFeatures features = e.getValue();
-          rgbtc = features.getRcompact()
-                + features.getGcompact()
-                + features.getBcompact()
-                + features.getTcompact()
-                + features.getCcompact();
+        //for (Entry<File,ImageFeatures> e : processor.getResults().entrySet()) {
+        //  File image = e.getKey();
+        //  ImageFeatures features = e.getValue();
+          rgbtc = features.getTokensAll();
+          //rgbtc = features.getRcompact()
+          //      + features.getGcompact()
+          //      + features.getBcompact()
+          //      + features.getTcompact()
+          //      + features.getCcompact();
           //rgbtc = features.getRtokens()
           //      + features.getGtokens()
           //      + features.getBtokens()
           //      + features.getTtokens()
           //      + features.getCtokens();
 
-          out.print( "[" + features.getRcompact() + "] " );
-          out.print( "[" + features.getGcompact() + "] " );
-          out.print( "[" + features.getBcompact() + "] " );
-          out.print( "[" + features.getTcompact() + "] " );
-          out.print( "[" + features.getCcompact() + "] " );
-          out.print( "\n" );
+          //out.print( "[" + features.getRcompact() + "] " );
+          //out.print( "[" + features.getGcompact() + "] " );
+          //out.print( "[" + features.getBcompact() + "] " );
+          //out.print( "[" + features.getTcompact() + "] " );
+          //out.print( "[" + features.getCcompact() + "] " );
+          //out.print( "\n" );
 
           //System.err.println( image + "\t" + features.getRtokens() );
           //System.err.println( image + "\t" + features.getGtokens() );
           //System.err.println( image + "\t" + features.getBtokens() );
           //System.err.println( image + "\t" + features.getTtokens() );
           //System.err.println( image + "\t" + features.getCtokens() );
-        }
+        //}
       }
     }
     //out.printf("Got part: name=%s, size=%d%n",part.getName(), part.getSize());
